@@ -34,7 +34,7 @@ class RAWv1DataFormat3Test {
     /**
      * Test parsing of valid data
      *
-     * @throws DataFormatException
+     * @throws DataFormatException if data is invalid
      */
     @Test
     void test_parse_valid_data() throws DataFormatException {
@@ -52,6 +52,7 @@ class RAWv1DataFormat3Test {
 
     /**
      * Test parsing data with maximum values
+     * @throws DataFormatException if data is invalid
      */
     @Test
     void test_parse_data_with_maximum_values() throws DataFormatException {
@@ -69,6 +70,7 @@ class RAWv1DataFormat3Test {
 
     /**
      * Test parsing of data with minimum values
+     * @throws DataFormatException if data is invalid
      */
     @Test
     void test_parse_data_with_minimum_values() throws DataFormatException {

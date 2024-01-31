@@ -7,8 +7,14 @@ import java.nio.ByteOrder;
 
 import static java.lang.String.format;
 
+/**
+ * Ruuvi RAW parser
+ */
 public class RuuviRawParser {
 
+    /**
+     * Ruuvi manufacturer id
+     */
     static final int MANUFACTURER_ID = 0x0499;
 
     /**
@@ -43,6 +49,13 @@ public class RuuviRawParser {
         return new RAWv1(dataFormat, humidity, temperature, pressure, accelerationX, accelerationY, accelerationZ, batteryVoltage);
     }
 
+    /**
+     * Parse RAWv2 data format 5
+     *
+     * @param rawData the raw data
+     * @return the RAWv2 object
+     * @throws DataFormatException if the data is not valid
+     */
     public static RAWv2 parseRAWv2(byte[] rawData) throws DataFormatException {
         final ByteBuffer buf = ByteBuffer.wrap(rawData).order(ByteOrder.LITTLE_ENDIAN);
         checkManufacturerData(buf);
@@ -88,6 +101,7 @@ public class RuuviRawParser {
      * Convert temperature raw value to float
      *
      * @param value the raw value
+     * @param decimal the decimal value
      * @return the temperature
      */
     public static float convertTemperatureRaw1(byte value, byte decimal) {

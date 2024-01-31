@@ -12,6 +12,7 @@ package se.redseven.ruuvitag;
  * @param accelerationY             Offset 9-10: Acceleration-Y (Most Significant Byte first). Value: -32768…32767, Signed
  * @param accelerationZ             Offset 11-12: Acceleration-Z (Most Significant Byte first). Value: -32768…32767, Signed
  * @param powerInfo                 Offset 13-14: Power info (11+5bit unsigned), first 11 bits is the battery voltage above 1.6V, in milli-volts (1.6V to 3.646V range). Last 5 bits unsigned are the TX power above -40dBm, in 2dBm steps. (-40dBm to +20dBm range). Value: 0…2046, 0…30
+ * @param txPower                   Offset 13-14: Power info (11+5bit unsigned), first 11 bits is the battery voltage above 1.6V, in milli-volts (1.6V to 3.646V range). Last 5 bits unsigned are the TX power above -40dBm, in 2dBm steps. (-40dBm to +20dBm range). Value: 0…2046, 0…30
  * @param movementCounter           Offset 15: Movement counter (8 bit unsigned), incremented by motion detection interrupts from accelerometer. Value: 0…255
  * @param measurementSequenceNumber Offset 16-17: Measurement sequence number (16 bit unsigned), each time a measurement is taken, this is incremented by one, used for measurement de-duplication. Depending on the transmit interval, multiple packets with the same measurements can be sent, and there may be measurements that never were sent. Value: 0…65534
  * @param macAddress                Offset 18-23: MAC address (48bit unsigned), MAC address of the device that sent the data. Value: 4 bytes with 0…256
