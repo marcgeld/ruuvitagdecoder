@@ -19,6 +19,16 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Marcus Gelderman</name>
+            <email>marcgeld@gmail.com</email>
+            <roles>
+                <role>Lead Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
