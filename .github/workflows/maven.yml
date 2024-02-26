@@ -23,6 +23,7 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+          check-latest: true
           cache: maven
           server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
           server-username: ${{ secrets.OSSRH_USERNAME  }}
