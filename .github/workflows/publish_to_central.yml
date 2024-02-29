@@ -19,15 +19,15 @@ jobs:
           check-latest: true
           cache: maven
           server-id: ossrh
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
+          server-username: ${{ secrets.OSSRH_USERNAME }}
+          server-password: ${{ secrets.OSSRH_TOKEN }}
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
       - name: Configure Git user
         run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
-      - name: Publish JAR
+      - name: Release JAR
         run: mvn -B release:prepare release:perform
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
