@@ -23,14 +23,16 @@ jobs:
           server-password: ${{ secrets.OSSRH_TOKEN }}
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      - name: Configure Git user
-        run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-      - name: Release JAR
-        run: mvn -B release:prepare release:perform
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: qcastel/github-actions-maven-release@master
+        with:
+          release-branch-name: "main"
+          gpg-enabled: "true"
+          gpg-key-id: ${{ secrets.GPG_PRIVATE_KEY_ID }}
+          gpg-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          git-release-bot-name: "release-bot"
+          git-release-bot-email: "release-bot@github.com"
+          access-token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
       - name: Publish to the Maven Central Repository
         run: mvn --no-transfer-progress --batch-mode deploy
         env:
