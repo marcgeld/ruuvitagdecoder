@@ -11,11 +11,6 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
-      #- name: Import GPG key
-      #  uses: crazy-max/ghaction-import-gpg@v6
-      #  with:
-      #    gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-      #    passphrase: ${{ secrets.PASSPHRASE }}
       - name: Set up Java for publishing to Maven Central Repository
         uses: actions/setup-java@v4
         with:
@@ -26,9 +21,9 @@ jobs:
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
-            - name: build artifact
+      - name: build artifact
           run: mvn clean package
-            - name: Create release
+      - name: Create release
           uses: ncipollo/release-action@v1
           with:
           allowUpdates: true
