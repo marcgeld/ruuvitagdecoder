@@ -35,10 +35,4 @@ jobs:
           git config user.email githubactions@github.com
           git tag -a $version -m "$version"
           git push origin $version
-      - name: Publish to the Maven Central Repository
-        run: mvn --no-transfer-progress --batch-mode deploy
-        env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-
 
