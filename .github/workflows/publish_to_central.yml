@@ -33,7 +33,7 @@ jobs:
 
       - name: Publish to Apache Maven Central
         run: mvn deploy
-          env:
-              MAVEN_USERNAME: maven_username123
-              MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
-              MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        env:
+          MAVEN_USERNAME: maven_username123
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
