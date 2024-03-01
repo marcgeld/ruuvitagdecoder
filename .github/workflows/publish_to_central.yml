@@ -22,6 +22,8 @@ jobs:
         run: mvn --no-transfer-progress deploy --file pom.xml
         env:
           GITHUB_TOKEN: ${{ github.token }} # GITHUB_TOKEN is the default env for the password
+          MAVEN_GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Set up Apache Maven Central
         uses: actions/setup-java@v4
@@ -37,4 +39,6 @@ jobs:
         env:
           #MAVEN_USERNAME: maven_username123
           MAVEN_CENTRAL_TOKEN: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
