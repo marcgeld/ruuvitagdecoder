@@ -25,7 +25,7 @@ jobs:
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
       - name: Maven Release
-        run: mvn -B mvn release:prepare release:perform
+        run: mvn -B release:prepare release:perform
         env:
           GITHUB_TOKEN: ${{ github.token }} # GITHUB_TOKEN is the default env for the password
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
