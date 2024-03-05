@@ -20,8 +20,8 @@ jobs:
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: GPG_PASSPHRASE
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
+      - name: Maven Release
+        run: mvn -B mvn release:prepare release:perform
         env:
           GITHUB_TOKEN: ${{ github.token }} # GITHUB_TOKEN is the default env for the password
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
