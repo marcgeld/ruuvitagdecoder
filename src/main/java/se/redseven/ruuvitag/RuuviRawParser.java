@@ -8,12 +8,12 @@ import java.nio.ByteOrder;
 import static java.lang.String.format;
 
 /**
- * Ruuvi RAW parser
+ * Ruuvitag RAW parser, parses the manufacturer data from RuuviTag.
  */
-public class RuuviRawParser {
+public final class RuuviRawParser {
 
     /**
-     * Ruuvi manufacturer id
+     * Ruuvi manufacturer id.
      */
     static final int MANUFACTURER_ID = 0x0499;
 
@@ -24,7 +24,7 @@ public class RuuviRawParser {
     }
 
     /**
-     * Parse RAWv1 data format 3
+     * Parse RAWv1 data format 3.
      *
      * @param rawData the raw data
      * @return the RAWv1 object
@@ -34,7 +34,7 @@ public class RuuviRawParser {
         final ByteBuffer buf = ByteBuffer.wrap(rawData).order(ByteOrder.LITTLE_ENDIAN);
         checkManufacturerData(buf);
 
-        byte dataFormat = buf.get();// dataFormat
+        byte dataFormat = buf.get();
         if (dataFormat != 3) {
             throw new DataFormatException("Data format code must be 3 for RAWv1");
         }
@@ -50,7 +50,7 @@ public class RuuviRawParser {
     }
 
     /**
-     * Parse RAWv2 data format 5
+     * Parse RAWv2 data format 5.
      *
      * @param rawData the raw data
      * @return the RAWv2 object
@@ -60,7 +60,7 @@ public class RuuviRawParser {
         final ByteBuffer buf = ByteBuffer.wrap(rawData).order(ByteOrder.LITTLE_ENDIAN);
         checkManufacturerData(buf);
 
-        byte dataFormat = buf.get();// dataFormat
+        byte dataFormat = buf.get();
         if (dataFormat != 5) {
             throw new DataFormatException("Data format code must be 5 for RAWv2");
         }
@@ -84,13 +84,13 @@ public class RuuviRawParser {
     }
 
     /**
-     * Check that the manufacturer data is correct
+     * Check that the manufacturer data is correct.
      *
      * @param buf the byte buffer
      * @throws DataFormatException if the manufacturer data is not correct
      */
     private static void checkManufacturerData(ByteBuffer buf) throws DataFormatException {
-        int manufacturerId = Short.reverseBytes(buf.getShort());// manufacturerId
+        int manufacturerId = Short.reverseBytes(buf.getShort()); // manufacturerId
         if (manufacturerId != MANUFACTURER_ID) {
             throw new DataFormatException(format("Manufacturer is wrong '0x%04X' must be '0x%04X'",
                     manufacturerId, MANUFACTURER_ID));
@@ -98,9 +98,9 @@ public class RuuviRawParser {
     }
 
     /**
-     * Convert temperature raw value to float
+     * Convert temperature raw value to float.
      *
-     * @param value the raw value
+     * @param value   the raw value
      * @param decimal the decimal value
      * @return the temperature
      */
