@@ -1,12 +1,10 @@
 name: Java CI with Maven and SonarCloud
-
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
     types: [opened, synchronize, reopened]
-
 jobs:
   build-and-analyze:
     runs-on: ubuntu-latest
