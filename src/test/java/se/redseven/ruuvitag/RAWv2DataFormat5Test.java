@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static se.redseven.ruuvitag.RuuviRawParser.parseRAWv2;
 
 /**
- * Test class for RAWv1 data format 3
+ * Test class for RAWv1 data format 3.
  */
 class RAWv2DataFormat5Test {
     /**
@@ -20,7 +20,8 @@ class RAWv2DataFormat5Test {
     float A_DELTA = 0.005f;
 
     /**
-     * Test parsing of invalid data format
+     * Test parsing of invalid data format.
+     *
      * @throws DataFormatException if data is invalid
      */
     @Test
@@ -34,7 +35,23 @@ class RAWv2DataFormat5Test {
     }
 
     /**
-     * Test parsing of valid data
+     * Test parsing of invalid data format.
+     *
+     * @throws DataFormatException if data is invalid
+     */
+    @Test
+    void test_invalid_manufacturer_data_exception() throws DataFormatException {
+        final DataFormatException thrown = Assertions.assertThrows(DataFormatException.class, () -> {
+            //Code under test
+            final byte[] rawdata = HexFormat.of().parseHex("04970912FC5394C37C0004FFFC040CAC364200CDCBB8334C884F");
+            parseRAWv2(rawdata);
+        });
+        Assertions.assertEquals("Manufacturer is wrong '0x0497' must be '0x0499'", thrown.getMessage());
+    }
+
+    /**
+     * Test parsing of valid data.
+     *
      * @throws DataFormatException if data is invalid
      */
     @Test
@@ -57,7 +74,8 @@ class RAWv2DataFormat5Test {
     }
 
     /**
-     * Test parsing data with maximum values
+     * Test parsing data with maximum values.
+     *
      * @throws DataFormatException if data is invalid
      */
     @Test
@@ -80,7 +98,8 @@ class RAWv2DataFormat5Test {
     }
 
     /**
-     * Test parsing of data with minimum values
+     * Test parsing of data with minimum values.
+     *
      * @throws DataFormatException if data is invalid
      */
     @Test
