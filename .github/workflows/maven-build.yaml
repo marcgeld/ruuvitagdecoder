@@ -24,12 +24,6 @@ jobs:
           server-password: MAVEN_CENTRAL_TOKEN
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.m2
-
       - name: Build and analyze with Maven
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
