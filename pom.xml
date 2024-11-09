@@ -13,28 +13,22 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <java.version>21</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+        <junit-bom.version>5.11.3</junit-bom.version>
 
-        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
-        <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
-        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+        <!-- build -->
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.11.1</maven-javadoc-plugin.version>
-        <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
-        <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
-
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+        <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+        <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
         <checkstyle.version>10.20.0</checkstyle.version>
-        <!-- Code Coverage Properties-->
-        <!--suppress UnresolvedMavenProperty to ignore warnings in idea-->
-        <jacoco.agent.argLine>${jacoco.generated.agent.argLine}</jacoco.agent.argLine>
-
-        <!-- replace with your data -->
-        <!--sonar.organization>se.redseven</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.projectKey>teamlead_java-maven-sonatype-starter</sonar.projectKey-->
+        <central-publishing-maven-plugin.version>0.6.0</central-publishing-maven-plugin.version>
     </properties>
 
     <licenses>
@@ -51,11 +45,14 @@
             <email>marcgeld@gmail.com</email>
             <url>https://redseven.se</url>
             <organization>se.redseven</organization>
-            <roles>
-                <role>Lead Developer</role>
-            </roles>
+            <organizationUrl>https://redseven.se</organizationUrl>
         </developer>
     </developers>
+
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/marcgeld/ruuvitagdecoder/issues</url>
+    </issueManagement>
 
     <scm>
         <connection>scm:git:https://github.com/marcgeld/ruuvitagdecoder.git</connection>
@@ -64,23 +61,12 @@
         <tag>HEAD</tag>
     </scm>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>oss.sonatype</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>5.11.2</version>
+                <version>${junit-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -95,16 +81,140 @@
         </dependency>
     </dependencies>
 
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.11.1</version>
+                <configuration>
+                    <sourcepath>src/main/java</sourcepath>
+                    <additionalOptions>-Xdoclint:none</additionalOptions>
+                    <additionalJOption>-Xdoclint:none</additionalJOption>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>${maven-gpg-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.3.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent-for-unit-tests</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report-for-unit-tests</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <title>Coverage with JaCoCo and Maven</title>
+                            <formats>
+                                <format>XML</format>
+                                <format>HTML</format>
+                            </formats>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>check-for-unit-tests</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>INSTRUCTION</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.75</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${checkstyle.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+
     <profiles>
         <profile>
-            <!-- required, used in .github/workflows/sonatype-publish.yml -->
+            <!-- required, used in .github/workflows/sonatype-publish.yaml -->
             <id>sonatypeDeploy</id>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>0.3.0</version>
+                        <version>${central-publishing-maven-plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
@@ -113,99 +223,9 @@
                             <waitUntil>published</waitUntil>
                         </configuration>
                     </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>3.3.0</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.6.3</version>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.1.0</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                                <configuration>
-                                    <gpgArguments>
-                                        <arg>--pinentry-mode</arg>
-                                        <arg>loopback</arg>
-                                    </gpgArguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <!-- optional: used in .github/workflows/build-and-analyze.yml -->
-            <id>coverageReport</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>3.5.2</version>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.12</version>
-                        <executions>
-                            <execution>
-                                <id>prepare-agent</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>report</id>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                                <configuration>
-                                    <formats>
-                                        <format>XML</format>
-                                    </formats>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
-            </plugin>
-        </plugins>
-    </build>
 </project>
