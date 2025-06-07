@@ -1,4 +1,5 @@
-name: Publish to Maven Central
+name: Publish to Maven Central (Central Portal)
+
 on:
   push:
     tags:
@@ -10,16 +11,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      #  with:
-      #    fetch-depth: 0  # Ensures all tags are fetched for versioning
-      - name: Set up JDK 21 and GPG for Maven Central
+
+      - name: Set up JDK 21 and GPG
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 21
-          server-id: central
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_CENTRAL_TOKEN
+          server-id: ossrh
+          server-username: NEXUS_USERNAME
+          server-password: NEXUS_PASSWORD
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
           cache: 'maven'
@@ -27,5 +27,5 @@ jobs:
       - name: Build and deploy to Maven Central
         run: mvn clean deploy -PsonatypeDeploy -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} --batch-mode --no-transfer-progress
         env:
-          MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.NEXUS_PASSWORD }} secrets.GPG_PASSPHRASE }}
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
