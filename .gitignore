@@ -104,3 +104,6 @@ replay_pid*
 /.idea
 /ruuvitagdecoder.iml
 /target
+
+# macOS
+.DS_Store
