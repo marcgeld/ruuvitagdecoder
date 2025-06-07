@@ -63,6 +63,10 @@
     </scm>
 
     <distributionManagement>
+        <snapshotRepository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/marcgeld/ruuvitagdecoder</url>
+        </snapshotRepository>
         <repository>
             <id>ossrh</id>
             <url>https://central.sonatype.com/api/v1/publish</url>

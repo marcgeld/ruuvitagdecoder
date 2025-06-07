@@ -1,32 +1,38 @@
-name: Java CI with Maven
+name: Maven Build and Snapshot Deploy
+
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-    types: [opened, synchronize, reopened]
 
 jobs:
-  build-and-analyze:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-        #with:
-        #  fetch-depth: 0  # Necessary for a comprehensive SonarCloud analysis
-      - uses: actions/setup-java@v4
+
+      - name: Check that version is a SNAPSHOT
+        run: |
+          VERSION=$(xmllint --xpath "/*[local-name()='project']/*[local-name()='version']/text()" pom.xml)
+          echo "Detected version: $VERSION"
+          if [[ "$VERSION" != *-SNAPSHOT ]]; then
+            echo "❌ Version is not a SNAPSHOT. Aborting GitHub Packages deploy."
+            exit 1
+          fi
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
         with:
-          distribution: 'graalvm'
+          distribution: 'temurin'
           java-version: 21
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
           cache: 'maven'
-          server-id: central
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_CENTRAL_TOKEN
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
-      - name: Build and analyze with Maven
+
+      - name: Build and Deploy SNAPSHOT to GitHub Packages
+        run: mvn clean deploy --no-transfer-progress --batch-mode
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.NEXUS_PASSWORD }}
-          # MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: mvn clean deploy --no-transfer-progress --batch-mode -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}
