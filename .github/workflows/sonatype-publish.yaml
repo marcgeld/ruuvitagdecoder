@@ -1,4 +1,4 @@
-name: Publish to Maven Central (Central Portal)
+name: Promote and Deploy to Maven Central
 
 on:
   push:
@@ -6,13 +6,19 @@ on:
       - 'v*'
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 21 and GPG
+      - name: Extract version from tag
+        id: extract_version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Set up Java and GPG
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -22,10 +28,12 @@ jobs:
           server-password: NEXUS_PASSWORD
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
-          cache: 'maven'
 
-      - name: Build and deploy to Maven Central
-        run: mvn clean deploy -PsonatypeDeploy -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} --batch-mode --no-transfer-progress
+      - name: Set Maven version
+        run: mvn versions:set -DnewVersion=${{ steps.extract_version.outputs.version }}
+
+      - name: Deploy to Maven Central
+        run: mvn deploy -PsonatypeDeploy -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} --batch-mode --no-transfer-progress
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
