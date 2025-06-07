@@ -6,7 +6,6 @@ import se.redseven.ruuvitag.exception.DataFormatException;
 
 import java.util.HexFormat;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static se.redseven.ruuvitag.RuuviRawParser.parseRAWv2;
 

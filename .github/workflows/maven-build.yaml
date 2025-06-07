@@ -13,8 +13,7 @@ jobs:
       - uses: actions/checkout@v4
         #with:
         #  fetch-depth: 0  # Necessary for a comprehensive SonarCloud analysis
-      - name: Set up JDK 21 for deploy to Sonatype
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: 'graalvm'
           java-version: 21
@@ -29,5 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.NEXUS_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: mvn -B verify --file pom.xml
+          # MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: mvn no-transfer-progress batch-mode \
+            -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} \
+            clean deploy
